@@ -7,6 +7,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@prisma/client": "^6.8.2",
     "autoprefixer": "^10.4.14",
     "next": "^13.5.11",
     "postcss": "^8.4.24",
@@ -18,6 +19,11 @@
     "@types/node": "^20.4.2",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.7",
-    "typescript": "^5.3.3"
+    "prisma": "^6.8.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "prisma": {
+    "seed": "node --loader ts-node/esm prisma/seed.mts"
   }
 }
