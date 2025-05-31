@@ -8,20 +8,19 @@ datasource db {
 }
 
 model Anbieter {
-  id            Int                  @id @default(autoincrement())
-  name          String
-  stadt         String
-  adresse       String
-  email         String
-  telefon       String
-  beschreibung  String
-  bewertung     Float
-  zertifikate   String[]
+  id              Int                 @id @default(autoincrement())
+  name            String
+  stadt           String
+  adresse         String
+  beschreibung    String
+  bewertung       Float
+  bild            String
+  email           String
   oeffnungszeiten Json
-  bild          String
-
-  services      AnbieterService[]
-  termintypen   AnbieterTermintyp[]
+  telefon         String
+  zertifikate     String[]
+  services        AnbieterService[]
+  termintypen     AnbieterTermintyp[]
 }
 
 model Servicekategorie {
@@ -39,7 +38,6 @@ model Termintyp {
 model AnbieterService {
   anbieterId Int
   serviceId  Int
-
   anbieter   Anbieter         @relation(fields: [anbieterId], references: [id])
   service    Servicekategorie @relation(fields: [serviceId], references: [id])
 
@@ -49,7 +47,6 @@ model AnbieterService {
 model AnbieterTermintyp {
   anbieterId  Int
   termintypId Int
-
   anbieter    Anbieter  @relation(fields: [anbieterId], references: [id])
   termintyp   Termintyp @relation(fields: [termintypId], references: [id])
 

@@ -1,13 +1,33 @@
 import Head from "next/head";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [anbieter, setAnbieter] = useState<any[]>([]);
+  const [services, setServices] = useState<string[]>([]);
+const [orte, setOrte] = useState<string[]>([]);
+
+useEffect(() => {
+  fetch("/api/suchvorschlaege")
+    .then(res => res.json())
+    .then(data => {
+      setServices(data.services);
+      setOrte(data.orte);
+    });
+}, []);
+
+useEffect(() => {
+  fetch("/api/anbieter")
+    .then(res => res.json())
+    .then(data => setAnbieter(data))
+    .catch(err => console.error("Fehler beim Laden der Anbieter:", err));
+}, []);
   return (
     <>
       <Head>
         <title>Haustierportal</title>
-        <meta name="description" content="Finde Tierärzte, Tier-Salons und vieles mehr in deiner Nähe" />
+        <meta name="description" content="Finde Hundesalons & Betreuungsangebote in deiner Nähe" />
       </Head>
       <Header />
       <main className="bg-rose-100 text-gray-800 min-h-screen">
@@ -15,8 +35,9 @@ export default function Home() {
   {/* Linke Seite: Headline + Buttons + Suche */}
   <div className="md:w-1/2 flex flex-col gap-6">
   <h1 className="text-2xl sm:text-3xl md:text-4xl text-white font-bold leading-snug text-center md:text-left">
-    Finde Tierärzte, Tier-Salons und vieles mehr in deiner Nähe
+  Finde Hundesalons & Betreuungsangebote in deiner Nähe
   </h1>
+  
 
   {/* Termintyp + Servicetyp kombiniert */}
   <div className="flex flex-col items-center md:items-start gap-4 w-full">
@@ -26,30 +47,35 @@ export default function Home() {
         <i className="fas fa-home mr-2" /> Vor-Ort-Termin
       </button>
       <button className="bg-white text-gray-700 font-semibold px-4 py-2 rounded hover:bg-blue-100 transition text-sm sm:text-base">
-        <i className="fas fa-video mr-2" /> Videosprechstunde
-      </button>
-      <button className="bg-white text-gray-700 font-semibold px-4 py-2 rounded hover:bg-blue-100 transition text-sm sm:text-base">
-        <i className="fas fa-house-user mr-2" /> Hausbesuch
+        <i className="fas fa-house-user mr-2" /> Hausbesuch/Abholung
       </button>
     </div>
 
     {/* Servicetyp-Leiste */}
     <div className="w-full bg-white shadow-md rounded-full px-6 py-4 flex flex-wrap sm:flex-nowrap items-center justify-center gap-3">
-      <input
-        type="text"
-        placeholder="Notfall, Klauen schneiden"
-        className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none text-sm min-w-[160px]"
-      />
-      <input
-        type="text"
-        placeholder="Hund, Katze"
-        className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none text-sm min-w-[160px]"
-      />
-      <input
-        type="text"
-        placeholder="Berlin, Hamburg"
-        className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none text-sm min-w-[160px]"
-      />
+    <input
+  type="text"
+  list="services"
+  placeholder="Fellpflege, Tagesbetreuung"
+  className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none text-sm min-w-[160px]"
+/>
+<datalist id="services">
+  {services.map((service, i) => (
+    <option key={i} value={service} />
+  ))}
+</datalist>
+
+<input
+  type="text"
+  list="orte"
+  placeholder="Berlin, Charlottenburg"
+  className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none text-sm min-w-[160px]"
+/>
+<datalist id="orte">
+  {orte.map((ort, i) => (
+    <option key={i} value={ort} />
+  ))}
+</datalist>
       <button className="bg-blue-200 text-white px-4 py-2 rounded hover:bg-blue-300 transition text-sm">
         <i className="fas fa-search mr-1" /> Suchen
       </button>
@@ -71,7 +97,7 @@ export default function Home() {
 <section className="flex flex-col md:flex-row justify-between gap-6 px-6 py-12 bg-white">
   {[
     {
-      title: "Medizinische Services",
+      title: "Platzhalter Service",
       text: "Ihr Tier ist krank? Buchen Sie medizinische Services wie Notfallbehandlung, Impfung, Blutabnahme in einer Tierarzt-Praxis in Ihrer Nähe, per Hausbesuch oder Videotelefonat.",
       img: "/hund-krank.jpg"
     },
